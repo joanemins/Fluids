@@ -439,13 +439,13 @@ public class Partida{
 			}
 	}
 
-	/*int puntoCasilla(int[,] tab, int x, int y, int color, int colorContrario){
+	int puntoCasilla(int[,] tab, int x, int y, int color, int colorContrario){
 		int puntos = 0, valor;
 		if (tab [x, y] == color) {
 			return 1;
 		} else if (tab [x, y] == colorContrario) {
 			return -1;
-		} else {
+		}/* else {
 			valor = laberinto [x, y];
 			if (valor % 10 == 0 && laberintoBoolAux[i - 1, j]) {
 				laberintoBool [i, j] = true;
@@ -466,9 +466,9 @@ public class Partida{
 				laberintoBool [i, j] = true;
 				encontrado = true;
 			}
-		}
+		}*/
 		return puntos;
-	}*/
+	}
 
 	void recursiveCount(){
 		puntosRecursivos++;
