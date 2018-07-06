@@ -46,6 +46,9 @@ public class Partida{
 	public int getAlto2(){
 		return alto;
 	}
+	public int getAnchoCasilla(){
+		return tamanyoCasilla;
+	}
 	public int[,] getTablero(){
 		int[,] aux = new int[this.getAncho(), this.getAlto()];
 		for(int i = 0; i < this.getAncho(); i++)
@@ -211,7 +214,7 @@ public class Partida{
 						for (f = 0; f < 1; f++) {
 							tablero [i * tamanyoCasilla, j * tamanyoCasilla + f] = -1;
 						}
-						for (f = 13; f < 14; f++) {
+						for (f = tamanyoCasilla - 1; f < tamanyoCasilla; f++) {
 							tablero [i * tamanyoCasilla, j * tamanyoCasilla + f] = -1;
 						}
 					}
@@ -225,7 +228,7 @@ public class Partida{
 						for (f = 0; f < 1; f++) {
 							tablero [i * tamanyoCasilla + f, j * tamanyoCasilla] = -1;
 						}
-						for (f = 13; f < 14; f++) {
+						for (f = tamanyoCasilla - 1; f < tamanyoCasilla; f++) {
 							tablero [i * tamanyoCasilla + f, j * tamanyoCasilla] = -1;
 						}
 					}
@@ -239,7 +242,7 @@ public class Partida{
 						for (f = 0; f < 1; f++) {
 							tablero [i * tamanyoCasilla + tamanyoCasilla - 1, j * tamanyoCasilla + f] = -1;
 						}
-						for (f = 13; f < 14; f++) {
+						for (f = tamanyoCasilla - 1; f < tamanyoCasilla; f++) {
 							tablero [i * tamanyoCasilla + tamanyoCasilla - 1, j * tamanyoCasilla + f] = -1;
 						}
 					}
@@ -254,7 +257,7 @@ public class Partida{
 						for (f = 0; f < 1; f++) {
 							tablero [i * tamanyoCasilla + f, j * tamanyoCasilla + tamanyoCasilla - 1] = -1;
 						}
-						for (f = 13; f < 14; f++) {
+						for (f = tamanyoCasilla - 1; f < tamanyoCasilla; f++) {
 							tablero [i * tamanyoCasilla + f, j * tamanyoCasilla + tamanyoCasilla - 1] = -1;
 						}
 					}
@@ -276,18 +279,19 @@ public class Partida{
 		int val;
 		jugadas [x, y] = color;
 
-		if (tablero [5 + x * 14, 5 + y * 14 + 0] == 0) {
-			tablero [6 + x * 14, 6 + y * 14] = color;
-			tablero [7 + x * 14, 6 + y * 14] = color;
-			tablero [6 + x * 14, 7 + y * 14] = color;
-			tablero [7 + x * 14, 7 + y * 14] = color;
+		if (tablero [tamanyoCasilla/2 + x * tamanyoCasilla, tamanyoCasilla/2 + y * tamanyoCasilla + 0] == 0) {
+			tablero [tamanyoCasilla/2 + x * tamanyoCasilla, tamanyoCasilla/2 + y * tamanyoCasilla] = color;
+			tablero [tamanyoCasilla/2 -1 + x * tamanyoCasilla, tamanyoCasilla/2 + y * tamanyoCasilla] = color;
+			tablero [tamanyoCasilla/2 + x * tamanyoCasilla, tamanyoCasilla/2 - 1 + y * tamanyoCasilla] = color;
+			tablero [tamanyoCasilla/2 - 1 + x * tamanyoCasilla, tamanyoCasilla/2 - 1 + y * tamanyoCasilla] = color;
+
 
 
 		} else {
-			tablero [6 + x * 14, 6 + y * 14] = 0;
-			tablero [7 + x * 14, 6 + y * 14] = 0;
-			tablero [6 + x * 14, 7 + y * 14] = 0;
-			tablero [7 + x * 14, 7 + y * 14] = 0;
+			tablero [tamanyoCasilla/2 + x * tamanyoCasilla, tamanyoCasilla/2 + y * tamanyoCasilla] = 0;
+			tablero [tamanyoCasilla/2-1 + x * tamanyoCasilla, tamanyoCasilla/2 + y * tamanyoCasilla] = 0;
+			tablero [tamanyoCasilla/2 + x * tamanyoCasilla, tamanyoCasilla/2-1 + y * tamanyoCasilla] = 0;
+			tablero [tamanyoCasilla/2-1 + x * tamanyoCasilla, tamanyoCasilla/2-1 + y * tamanyoCasilla] = 0;
 		}
 
 	}
@@ -385,7 +389,7 @@ public class Partida{
 
 	public bool jugadaPosible(int x, int y){
 		bool siono = true;
-		if (tablero [5 + x * 14, 5 + y * 14 + 0] != 0) {
+		if (tablero [tamanyoCasilla/2  + x * tamanyoCasilla, tamanyoCasilla/2  + y * tamanyoCasilla + 0] != 0) {
 			siono = false;
 		}
 		return siono;
@@ -422,21 +426,27 @@ public class Partida{
 
 	int puntuacion(int[,] tab, int color){
 		int i, j, f, c;
-		int[,] puntosTotales = new int[ancho, alto];
-		int[,] puntosPintado = new int[ancho, alto];
 		int[,] tabAux = new int[ancho, alto];
+		int[,] tabAux1 = new int[ancho, alto];
+		int[,] tabAux2 = new int[ancho, alto];
 		int colorContrario = 1 - (color - 5) + 5;
 
+		bool siono = false;
+		do {
+			
+		} while(!siono);
+
 		for (i = 0; i < ancho; i++)
-			for (j = 0; j < ancho; j++) {
+			for (j = 0; j < alto; j++) {
 				if (laberinto [i, j] != -1) {
 					for (f = 0; f < ancho; f++)
-						for (c = 0; c < ancho; c++) {
+						for (c = 0; c < alto; c++) {
 							tabAux [f, c] = tab [f, c];
 						}
-					puntosTotales [i, j] = puntoCasilla (tabAux, i, j, color, colorContrario);
+					//puntosTotales [i, j] = puntoCasilla (tabAux, i, j, color, colorContrario);
 				}
 			}
+		return 0;
 	}
 
 	int puntoCasilla(int[,] tab, int x, int y, int color, int colorContrario){
@@ -591,10 +601,10 @@ public class Partida{
 	}
 
 	public void jugada(int[,] tab, int x, int y, int color){
-			tab [6 + x * 14, 6 + y * 14] = color;
-			tab [7 + x * 14, 6 + y * 14] = color;
-			tab [6 + x * 14, 7 + y * 14] = color;
-			tab [7 + x * 14, 7 + y * 14] = color;
+		tab [tamanyoCasilla/2  + x * tamanyoCasilla, tamanyoCasilla/2  + y * tamanyoCasilla] = color;
+		tab [tamanyoCasilla/2-1  + x * tamanyoCasilla, tamanyoCasilla/2  + y * tamanyoCasilla] = color;
+		tab [tamanyoCasilla/2  + x * tamanyoCasilla, tamanyoCasilla/2-1  + y * tamanyoCasilla] = color;
+		tab [tamanyoCasilla/2-1  + x * tamanyoCasilla, tamanyoCasilla/2-1  + y * tamanyoCasilla] = color;
 	}
 
 
