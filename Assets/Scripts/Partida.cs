@@ -409,74 +409,177 @@ public class Partida{
 		int i, j, f, c;
 		int[,] tableroAux = new int[ancho * tamanyoCasilla, alto * tamanyoCasilla];
 
-		int colorcontrario = 1 - (color - 5) + 5;
-		for (i = 0; i < ancho; i++)
+		int colorContrario = 1 - (color - 5) + 5;
+		/*for (i = 0; i < ancho; i++)
 			for (j = 0; j < alto; j++) {
 				if(jugadas [i, j] == 0){
 					for (f = 0; f < ancho; f++)
-						for (c = 0; c < alto * tamanyoCasilla; c++) {
+						for (c = 0; c < alto; c++) {
 							jugadasAux [f, c] = jugadas [f, c];
 						}
 					jugadasAux [i, j] = color;
 					jugadasPosibles [i, j] = puntuacion(jugadasAux, color);
 				}
 
+			}*/
+		for (f = 0; f < ancho; f++)
+			for (c = 0; c < alto; c++) {
+				jugadasAux [f, c] = jugadas [f, c];
 			}
+		Debug.Log (puntuacion(jugadasAux, color));
 	}
 
 	int puntuacion(int[,] tab, int color){
 		int i, j, f, c;
-		int[,] tabAux = new int[ancho, alto];
-		int[,] tabAux1 = new int[ancho, alto];
-		int[,] tabAux2 = new int[ancho, alto];
+		int[,] puntos = new int[ancho, alto];
+		int score = 0;
 		int colorContrario = 1 - (color - 5) + 5;
-
-		bool siono = false;
-		do {
-			
-		} while(!siono);
-
 		for (i = 0; i < ancho; i++)
 			for (j = 0; j < alto; j++) {
-				if (laberinto [i, j] != -1) {
-					for (f = 0; f < ancho; f++)
-						for (c = 0; c < alto; c++) {
-							tabAux [f, c] = tab [f, c];
-						}
-					//puntosTotales [i, j] = puntoCasilla (tabAux, i, j, color, colorContrario);
+				if (laberinto [i, j] != -1 && tab[i,j] == 0) {
+					puntos [i, j] = puntosCasilla (tab,i,j,color,colorContrario);
 				}
 			}
-		return 0;
+		for (i = 0; i < ancho; i++)
+			for (j = 0; j < alto; j++) {
+				score += puntos [i, j];
+			}
+		return score;
 	}
 
-	int puntoCasilla(int[,] tab, int x, int y, int color, int colorContrario){
+	int puntosCasilla(int[,] tab, int x, int y, int color, int colorContrario){
 		int puntos = 0, valor;
-		if (tab [x, y] == color) {
-			return 1;
-		} else if (tab [x, y] == colorContrario) {
-			return -1;
-		}/* else {
-			valor = laberinto [x, y];
-			if (valor % 10 == 0 && laberintoBoolAux[i - 1, j]) {
-				laberintoBool [i, j] = true;
-				encontrado = true;
+		int i, j;
+		bool[,] tabAux = new bool[ancho, alto];
+		bool[,] tabAux1 = new bool[ancho, alto];
+		bool siono;
+		tabAux1 [x, y] = true;
+		bool p1 = false, p2 = false;
+		int d1 = 0, d2 = 0, m1, m2;
+		do {
+			siono = false;
+
+			m1= 100;
+			m2 = 100;
+			for(i = 0; i < ancho; i++)
+				for(j = 0; j < alto; j++){
+					tabAux[i,j] = tabAux1[i,j];
+				}
+			for(i = 0; i < ancho; i++)
+				for(j = 0; j < alto; j++){
+					if(tabAux[i, j] == false && laberinto[i ,j]!= -1){
+						valor = laberinto [i, j];
+
+						if (valor % 10 == 0 && i > 0 && tabAux[i - 1, j]) {
+							tabAux1 [i, j] = true;
+							if(tab[i,j] == color){
+								siono= true;
+								p1 = true;
+								d1 = Mathf.Abs(i - x) + Mathf.Abs(j-y);
+								if(d1<m1){
+									m1= d1;
+								}else{
+									d1 = m1;
+								}
+							}else if(tab[i,j] == colorContrario){
+								siono = true;
+								p2 = true;
+								d2 = Mathf.Abs(i - x) + Mathf.Abs(j-y);
+								if(d2<m2){
+									m2= d2;
+								}else{
+									d2 = m2;
+								}
+							}
+						}
+						valor = valor / 10;
+						if (valor % 10 == 0 && j > 0 && tabAux[i, j - 1]) {
+							tabAux1 [i, j] = true;
+							if(tab[i, j] == color){
+								siono= true;
+								p1 = true;
+								d1 = Mathf.Abs(i-x) + Mathf.Abs(j -y);
+								if(d1<m1){
+									m1= d1;
+								}else{
+									d1 = m1;
+								}
+							}else if(tab[i, j] == colorContrario){
+								siono = true;
+								p2 = true;
+								d2 = Mathf.Abs(i-x) + Mathf.Abs(j - y);
+								if(d2<m2){
+									m2= d2;
+								}else{
+									d2 = m2;
+								}
+							}
+						}
+						valor = valor / 10;
+						if (valor % 10 == 0 && i < ancho - 1 && tabAux[i + 1, j]) {
+							tabAux1 [i, j] = true;
+							if(tab[i,j] == color){
+								siono= true;
+								p1 = true;
+								d1 = Mathf.Abs(i - x) + Mathf.Abs(j-y);
+								if(d1<m1){
+									m1= d1;
+								}else{
+									d1 = m1;
+								}
+							}else if(tab[i,j] == colorContrario){
+								siono = true;
+								p2 = true;
+								d2 = Mathf.Abs(i-x) + Mathf.Abs(j-y);
+								if(d2<m2){
+									m2= d2;
+								}else{
+									d2 = m2;
+								}
+							}
+						}
+						valor = valor / 10;
+						if (valor % 10 == 0 && j < alto - 1 && tabAux[i, j + 1]) {
+							tabAux1 [i, j] = true;
+							if(tab[i,j] == color){
+								siono= true;
+								p1 = true;
+								d1 = Mathf.Abs(i-x) + Mathf.Abs(j-y);
+								if(d1<m1){
+									m1= d1;
+								}else{
+									d1 = m1;
+								}
+							}else if(tab[i,j] == colorContrario){
+								siono = true;
+								p2 = true;
+								d2 = Mathf.Abs(i-x) + Mathf.Abs(j-y);
+								if(d2<m2){
+									m2= d2;
+								}else{
+									d2 = m2;
+								}
+							}
+						}
+					}
+				}
+			if(p1 && p2){
+				if(d1 < d2){
+					puntos = 1;
+				}else if(d2 > d1){
+					puntos = -1;
+				}else{
+					puntos = 0;
+				}
+			}else if(p1){
+				puntos = 1;
+			}else if(p2){
+				puntos = -1;
+			}else{
+				puntos = 0;
 			}
-			valor = valor / 10;
-			if (valor % 10 == 0 && laberintoBoolAux[i, j - 1]) {
-				laberintoBool [i, j] = true;
-				encontrado = true;
-			}
-			valor = valor / 10;
-			if (valor % 10 == 0 && laberintoBoolAux[i + 1, j]) {
-				laberintoBool [i, j] = true;
-				encontrado = true;
-			}
-			valor = valor / 10;
-			if (valor % 10 == 0 && laberintoBoolAux[i, j + 1]) {
-				laberintoBool [i, j] = true;
-				encontrado = true;
-			}
-		}*/
+		} while(!siono);
+			
 		return puntos;
 	}
 

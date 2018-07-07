@@ -53,10 +53,9 @@ public class GameScript : MonoBehaviour {
 
 	void iniciarPartida(){
 		partida = new Partida();
-		partida.crearLaberinto (40);
+		partida.crearLaberinto (20);
 		contadorPartida = 0;
 		color = 5;
-		partida.IA (color);
 		//partida.IA ();
 	}
 
@@ -137,14 +136,15 @@ public class GameScript : MonoBehaviour {
 		partida.casillaPulsada (x, y,color);
 		pintarTablero ();
 		contadorPartida++;
-		if(contadorPartida == 6)
+		partida.IA (color);
+		if(contadorPartida == 2)
 			llenarAgua ();
 		if (contadorPartida % 2 == 0) {
 			color = 5;
 		} else {
 			color = 6;
 		}
-		partida.IA (color);
+
 	}
 
 	public void next(){
