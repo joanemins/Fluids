@@ -56,7 +56,7 @@ public class GameScript : MonoBehaviour {
 		partida.crearLaberinto (20);
 		contadorPartida = 0;
 		color = 5;
-		//partida.IA ();
+		//partida.IA (color);
 	}
 
 	void crearTablero(){
@@ -144,6 +144,7 @@ public class GameScript : MonoBehaviour {
 		} else {
 			color = 6;
 		}
+
 
 	}
 

@@ -191,6 +191,10 @@ public class Partida{
 			for (j = 0; j < alto; j++) {
 				laberinto [i, j] = laberintoRestart [i, j];
 			}
+		for(i = 0; i < ancho; i++)
+			for (j = 0; j < alto; j++) {
+				jugadas [i, j] = 0;
+			}
 
 	}
 
@@ -410,7 +414,7 @@ public class Partida{
 		int[,] tableroAux = new int[ancho * tamanyoCasilla, alto * tamanyoCasilla];
 
 		int colorContrario = 1 - (color - 5) + 5;
-		/*for (i = 0; i < ancho; i++)
+		for (i = 0; i < ancho; i++)
 			for (j = 0; j < alto; j++) {
 				if(jugadas [i, j] == 0){
 					for (f = 0; f < ancho; f++)
@@ -421,7 +425,18 @@ public class Partida{
 					jugadasPosibles [i, j] = puntuacion(jugadasAux, color);
 				}
 
-			}*/
+			}
+		int max = -1000;
+		int a = 0, b = 0;
+		for (f = 0; f < ancho; f++)
+			for (c = 0; c < alto; c++) {
+				if (jugadasPosibles[f,c] > max) {
+					max = jugadasPosibles [f, c];
+					a = f;
+					b = c;
+				}
+			}
+		//Debug.Log (a + " " + b);
 		for (f = 0; f < ancho; f++)
 			for (c = 0; c < alto; c++) {
 				jugadasAux [f, c] = jugadas [f, c];
@@ -710,8 +725,126 @@ public class Partida{
 		tab [tamanyoCasilla/2-1  + x * tamanyoCasilla, tamanyoCasilla/2-1  + y * tamanyoCasilla] = color;
 	}
 
+	/*public int calcularPuntos(int tab[][],int min,int max,int c,int col,int cont){
+		
+		int n,a,b,puntos,mejpunt;
+		int taux[][]=new int[8][8];
+		for(a=0;a<8;a++)
+			System.arraycopy(tab[a], 0, taux[a], 0, 8);
+		int jug[]=new int[100];
+		int movi[][]=new int[8][8];
+		if(cont<=0)
+			return calcularPuntos2(tab,min,max,c,col,1);
+		if(c==col)
+			mejpunt=min;
+		else
+			mejpunt=max;
+		n=movimientosPosibles(tab,jug,c);
+		ordenarJugadas(n,jug,tab,c);
+		for(a=0;a<n;a++){
+			calcularMovimientosPieza(taux,movi,jug[a]/1000,jug[a]%1000/100,c);
+			moverPieza(taux,movi,jug[a]%100/10,jug[a]%10);
+			if(tab[jug[a]%100/10][jug[a]%10]!=0){
+				ultx=jug[a]%100/10;
+				ulty=jug[a]%10;
+			}else{
+				ultx=100;
+				ulty=100;
+			}
+
+			puntos=calcularPuntos(taux,min,max,cambiarColor(c),col,cont-1);
+			for(b=0;b<8;b++)
+				System.arraycopy(tab[b], 0, taux[b], 0, 8);
+			
+			iniciarMovimientos(movi);
+			if (c==col&&puntos>min){
+				if(puntos>=max)
+					return max;
+				min=puntos;
+				mejpunt=puntos;
+			}else if(c!=col&&puntos<max){
+				if(puntos<=min)
+					return min;
+				max=puntos;
+				mejpunt=puntos;
+			}
+		}
+		return mejpunt;
+	}
+	public void inteligenciaArtificial(int tab[][],int col){
+		
+		boolean ko=false;
+		int n,a,b,puntos,min=-100001,max=100001,cont=3,fin,ran,m=0,mj=-1002;
+		int taux[][]=new int[8][8];
+		int jug[]=new int[100];
+		int jugfin[]=new int[100];
+		int movi[][]=new int[8][8];
+		for(a=0;a<8;a++)
+			System.arraycopy(tab[a], 0, taux[a], 0, 8);
+		n=movimientosPosibles(tab,jug,col);
+		ordenarJugadas(n,jug,tab,col);
+		jugfin[0]=jug[0];
+		for(int i=0;i<n&&!ko;i++){
+			calcularMovimientosPieza(taux,movi,jug[i]/1000,jug[i]%1000/100,col);
+			moverPieza(taux,movi,jug[i]%100/10,jug[i]%10);
+			fin=calcularFinal(taux,col);
+			if(fin==1){
+				ko=true;
+				jugfin[m]=jug[i];
+				m++;
+			}
+			for(b=0;b<8;b++)
+				System.arraycopy(tab[b], 0, taux[b], 0, 8);
+			
+			iniciarMovimientos(movi);
+		}
+		for(a=0;a<n&&!ko;a++){
+			calcularMovimientosPieza(taux,movi,jug[a]/1000,jug[a]%1000/100,col);
+			moverPieza(taux,movi,jug[a]%100/10,jug[a]%10);
+			puntos=calcularPuntos(taux,min,max,cambiarColor(col),col,cont);
+			for(b=0;b<8;b++)
+				System.arraycopy(tab[b], 0, taux[b], 0, 8);
+			
+			iniciarMovimientos(movi);
+			if (puntos>mj){
+				mj=puntos;
+				m=0;
+				jugfin[m]=jug[a];
+				m++;
+				min=puntos;
+			}
+			if(puntos==100001){
+				ko=true;
+			}
+		}
+		ran=(int)(Math.random()*m);
+		calcularMovimientosPieza(tab,movi,jugfin[ran]/1000,jugfin[ran]%1000/100,col);
+		moverPieza(tab,movi,jugfin[ran]%100/10,jugfin[ran]%10);
+		fin=calcularFinal(tab,col);
+		if (fin==0){
+			iniciarMovimientos(movimientos);
+			color=cambiarColor(color);
+			nEstado=3;
+			repaint();
+		}else if(fin==1){
+			nEstado=3;
+			repaint();
+			JOptionPane.showMessageDialog(null, "Jaque Mate!!");
+			nEstado=0;
+			repaint();
+		}else{
+			nEstado=3;
+			repaint();
+			JOptionPane.showMessageDialog(null, "Tablas");
+			nEstado=0;
+			repaint();
+		}
+	}
+
+
 
 	/*
+	 * 
 	public void IA(int color){
 		int[,] jugadasPosibles= new int[ancho, alto];
 		int i, j, f, c;
