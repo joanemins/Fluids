@@ -444,6 +444,48 @@ public class Partida{
 		Debug.Log (puntuacion(jugadasAux, color));
 	}
 
+	/*
+	 * 
+	//La idea es que añada las casillas expandidas en la iteración a la lista auxiliar, de esta forma podemos diferenciar cuando haya conflictos entre nodos expandidos
+	//no expandidos, explorados en la anterior iteración o explorado en esta misma iteración.
+	public void expandir(int[,] tablero, Vector2 casillaInicial, int colorPropio, List<Vector3> expandidos, List<Vector3> auxiliar){
+
+	}
+
+
+
+	/// <summary>
+	/// Puntuacion the specified tablero, colorPropio, colorContrario and fichas.
+	/// </summary>
+	/// <param name="tablero">Tablero.</param>
+	/// <param name="colorPropio">Color propio.</param>
+	/// <param name="colorContrario">Color contrario.</param>
+	/// <param name="fichas">Casilla donde se han colocado los tokens de los jugadores, incluye (x,y,color)</param>
+	public double puntuacion(int[,] tablero, int colorPropio, int colorContrario,Vector3[] fichas){
+		List<Vector3> explorados;
+		List<Vector3> aux;
+		List<Vector3> expandidos;
+		foreach(Vector3 casilla in fichas){
+			explorados.Add(casilla);
+		}
+		do{
+			aux.Clear();
+			foreach(Vector3 v in explorados){
+				expandir(tablero, v,colorPropio,expandidos,aux);
+				expandidos.Add(v);
+				explorados.Remove(v);
+			}
+			aux.CopyTo(explorados);
+			aux.Clear();
+		}
+		while(expandidos.Capacity + explorados.Capacity <20);
+		double resultado = 0.0;
+		foreach(Vector3 v in explorados)
+			return resultado;
+	} 
+	*/
+
+
 	int puntuacion(int[,] tab, int color){
 		int i, j, f, c;
 		int[,] puntos = new int[ancho, alto];
